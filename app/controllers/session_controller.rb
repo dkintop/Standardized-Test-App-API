@@ -7,9 +7,14 @@ class SessionController < ApplicationController
         @user = User.find_by(email: session_params[:email])
         
         if @user && @user.authenticate(session_params[:password])
-
-            token = JWT.encode(@user, ENV["JWT_SECRET"])
-
+            
+            token = JWT.encode({
+                email: @user.email,
+                name: @user.name,
+                discipline: @user.discipline,
+                id: @user.id,
+                }, ENV["JWT_SECRET"])
+            
             
             render json: {
                 email: @user.email, 
